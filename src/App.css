@@ -1,3 +1,53 @@
+:root {
+  .app {
+    --primary: #8e51ff;
+    /* Visual */
+    --element-shadow: 0 0 0 1px #00000014;
+    --element-border: 1.5px solid transparent;
+    --element-button-shadow:
+      0px 8px 12px color(display-p3 0.557 0.318 1 / 0.32),
+      inset 0px 0px 4px color(display-p3 1 1 1 / 0.92);
+    /* Background */
+    --background: #fafafa;
+    --card-background: #ffffff;
+    /* Text */
+    --text-primary: #262626;
+    --text-secondary: #727272;
+    /* Input */
+    --input-disabled-background: #fafafa;
+    --input-placeholder: #7e7e7e;
+    --input-error: 0 0 0 1px #ffa2a2;
+    /* Theme switcher */
+    --switch-background: #f5f5f5;
+    --input-icon: #727272;
+    --switch-icon-active: #8e51ff;
+    --switch-background-active: #ffffff;
+  }
+
+  .app[data-theme="dark"] {
+    /* Visual */
+    --element-shadow: none;
+    --element-border: 1.5px solid #1a1a1a;
+    --element-button-shadow: none;
+    /* Background */
+    --background: #0a0a0a;
+    --card-background: #0f0f0f;
+    /* Text */
+    --text-primary: #fbfbfe;
+    --text-secondary: #8e8e8e;
+    /* Input */
+    --input-disabled-background: #141414;
+    --input-placeholder: #8e8e8e;
+    /* Theme switcher */
+    --switch-background: #0f0f0f;
+    --input-icon: #797979;
+    --switch-icon-active: #8e51ff;
+    --switch-background-active: #141414;
+  }
+}
+
+/**/
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -187,6 +237,8 @@
 
 .app {
   display: flex;
+  flex-direction: column;
+  gap: 24px;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -199,9 +251,10 @@
   width: 100%;
   max-width: 429px;
   padding: 32px 32px 24px 32px;
-  background-color: #ffffff;
+  background-color: var(--card-background);
   border-radius: 32px;
-  box-shadow: 0 0 0 1px #00000014;
+  box-shadow: var(--element-shadow);
+  border: var(--element-border);
 }
 
 .shortener label {
@@ -211,7 +264,7 @@
   font-weight: 600;
   line-height: 27px;
   letter-spacing: 0.0054em;
-  color: #262626;
+  color: var(--text-primary);
   text-align: start;
 }
 
@@ -220,12 +273,12 @@
   height: 48px;
   padding: 0px 16px;
   margin-bottom: 24px;
-  border: none;
-  box-shadow: 0 0 0 1px #00000014;
+  border: var(--element-border);
+  box-shadow: var(--element-shadow);
   background-color: transparent;
   border-radius: 12px;
   font-size: 18px;
-  color: #262626;
+  color: var(--text-primary);
   font-style: normal;
   font-weight: 500;
   line-height: 27px;
@@ -234,17 +287,17 @@
 }
 
 .shortener input::placeholder {
-  color: #7e7e7e;
+  color: var(--input-placeholder);
 }
 
 .shortener input:focus {
-  border-color: #8e51ff;
+  border-color: var(--primary);
 }
 
 .shortener input[readonly] {
-  background-color: #fafafa;
+  background-color: var(--input-disabled-background);
   border-color: transparent;
-  color: #2d0c0c;
+  color: var(--text-primary);
 }
 
 .shortener button {
@@ -252,7 +305,7 @@
   height: 52px;
   border: none;
   border-radius: 14px;
-  background-color: #8e51ff;
+  background-color: var(--primary);
   color: #ffffff;
   cursor: pointer;
   font-size: 18px;
@@ -260,12 +313,7 @@
   font-weight: 500;
   line-height: 27px;
   letter-spacing: 0.0054em;
-  box-shadow:
-    0px 8px 12px rgba(152, 77, 255, 0.32),
-    inset 0px 0px 4px rgba(255, 255, 255, 0.92);
-  box-shadow:
-    0px 8px 12px color(display-p3 0.557 0.318 1 / 0.32),
-    inset 0px 0px 4px color(display-p3 1 1 1 / 0.92);
+  box-shadow: var(--element-button-shadow);
   transition: background-color 0.2 ease;
 }
 
@@ -276,7 +324,7 @@
 .shortener p {
   margin-top: 24px;
   text-align: center;
-  color: #727272;
+  color: var(--text-secondary);
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -317,29 +365,79 @@
 .short-url-container input {
   width: 100%;
   margin-bottom: 0;
-  padding-right: 85px;
+  padding-right: 48px;
 }
 
 .shortener .copy-button {
   position: absolute;
   top: 50%;
-  right: 6px;
+  right: 14px;
   transform: translateY(-50%);
-  width: auto;
-  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   margin: 0;
-  padding: 0 12px;
-  border-radius: 8px;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 21px;
-  letter-spacing: 0.0042em;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
   box-shadow: none;
+  cursor: pointer;
+}
+
+.shortener .copy-button svg {
+  width: 18px;
+}
+
+.shortener .copy-button:hover:not(disabled) {
+  color: var(--text-primary);
+  background: transparent;
 }
 
 .shortener .copy-button:disabled {
-  background-color: #ebebeb;
-  color: #797979;
-  cursor: not-allowed;
+  color: var(--input-disabled-background);
+  background: transparent;
+  cursor: default;
+  opacity: 0.5;
+}
+
+.theme-switcher {
+  display: flex;
+  width: 116px;
+  height: 52px;
+  padding: 4px;
+  background: var(--switch-background);
+  border-radius: 28px;
+  box-shadow: var(--element-shadow);
+  border: var(--element-border);
+}
+
+.theme-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 24px;
+  background: transparent;
+  color: var(--input-icon);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2 ease,
+    box-shadow 0.2 ease;
+}
+
+.theme-option.active {
+  background: var(--switch-background-active);
+  color: var(--switch-icon-active);
+}
+
+.theme-option svg {
+  width: 24px;
+  height: 24px;
 }

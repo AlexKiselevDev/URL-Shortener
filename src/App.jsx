@@ -3,30 +3,55 @@ import "./App.css";
 
 function App() {
   function generateShortUrl() {
-    if (originalURL.trim() === "") {
+    const value = originalURL.trim();
+    if (value === "") {
       setError("Please enter a URL");
+      setShortUrl("");
       return;
     }
     try {
-      const url = new URL(originalURL.trim());
-      if (!["http:", "https:"].includes(url.protocol)) {
+      const url = new URL(value);
+      if (url.protocol !== "http:" && url.protocol !== "https:") {
         throw new Error("Invalid protocol");
       }
-    } catch {
+      const hostname = url.hostname;
+      if (hostname.startsWith(".") || hostname.endsWith(".")) {
+        throw new Error("Invalid hostname");
+      }
+      if (!hostname.includes(".")) {
+        throw new Error("Missing domain extension");
+      }
+      const parts = hostname.split(".");
+      if (parts.some((part) => part.length === 0)) {
+        throw new Error("Invalid hostname");
+      }
+      const tld = parts[parts.length - 1];
+      if (!/^[a-zA-Z]{2,}$/.test(tld)) {
+        throw new Error("Invalid domain extension");
+      }
+      setError("");
+      const randomCode = Math.random().toString(36).substring(2, 8);
+      const generatedUrl = `https://${randomCode}`;
+      setShortUrl(generatedUrl);
+      setCopied(false);
+    } catch (error) {
+      console.log("Validation error:", error);
       setError("Please enter a valid URL");
-      return;
+      setShortUrl("");
     }
-    setError("");
-    const randomCode = Math.random().toString(36).substring(2, 8);
-    const generatedUrl = `https://${randomCode}`;
-    setShortUrl(generatedUrl);
-    setCopied(false);
   }
   const [originalURL, setOriginalUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme || "light";
+  });
+  function changeTheme(newTheme) {
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  }
   async function copyShortUrl() {
     if (!shortUrl) return;
     try {
@@ -72,47 +97,48 @@ function App() {
             readOnly
             disabled
           />
-          <button
-            type="button"
-            className="copy-button"
-            onClick={copyShortUrl}
-            disabled={!shortUrl}
-            aria-label={copied ? "Copied" : "Copy short URL"}
-          >
-            {copied ? (
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M20 6L9 17L4 12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            ) : (
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5 15C4.06812 15 3.60218 15 3.23463 14.8478C2.74458 14.6448 2.35523 14.2554 2.15224 13.7654C2 13.3978 2 12.9319 2 12V5.2C2 4.0799 2 3.51984 2.21799 3.09202C2.40973 2.71569 2.71569 2.40973 3.09202 2.21799C3.51984 2 4.0799 2 5.2 2H12C12.9319 2 13.3978 2 13.7654 2.15224C14.2554 2.35523 14.6448 2.74458 14.8478 3.23463C15 3.60218 15 4.06812 15 5M12.2 22H18.8C19.9201 22 20.4802 22 20.908 21.782C21.2843 21.5903 21.5903 21.2843 21.782 20.908C22 20.4802 22 19.9201 22 18.8V12.2C22 11.0799 22 10.5198 21.782 10.092C21.5903 9.71569 21.2843 9.40973 20.908 9.21799C20.4802 9 19.9201 9 18.8 9H12.2C11.0799 9 10.5198 9 10.092 9.21799C9.71569 9.40973 9.40973 9.71569 9.21799 10.092C9 10.5198 9 11.0799 9 12.2V18.8C9 19.9201 9 20.4802 9.21799 20.908C9.40973 21.2843 9.71569 21.5903 10.092 21.782C10.5198 22 11.0799 22 12.2 22Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
-          </button>
+          {shortUrl && (
+            <button
+              type="button"
+              className="copy-button"
+              onClick={copyShortUrl}
+              aria-label={copied ? "Copied" : "Copy short URL"}
+            >
+              {copied ? (
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 6L9 17L4 12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 15C4.06812 15 3.60218 15 3.23463 14.8478C2.74458 14.6448 2.35523 14.2554 2.15224 13.7654C2 13.3978 2 12.9319 2 12V5.2C2 4.0799 2 3.51984 2.21799 3.09202C2.40973 2.71569 2.71569 2.40973 3.09202 2.21799C3.51984 2 4.0799 2 5.2 2H12C12.9319 2 13.3978 2 13.7654 2.15224C14.2554 2.35523 14.6448 2.74458 14.8478 3.23463C15 3.60218 15 4.06812 15 5M12.2 22H18.8C19.9201 22 20.4802 22 20.908 21.782C21.2843 21.5903 21.5903 21.2843 21.782 20.908C22 20.4802 22 19.9201 22 18.8V12.2C22 11.0799 22 10.5198 21.782 10.092C21.5903 9.71569 21.2843 9.40973 20.908 9.21799C20.4802 9 19.9201 9 18.8 9H12.2C11.0799 9 10.5198 9 10.092 9.21799C9.71569 9.40973 9.40973 9.71569 9.21799 10.092C9 10.5198 9 11.0799 9 12.2V18.8C9 19.9201 9 20.4802 9.21799 20.908C9.40973 21.2843 9.71569 21.5903 10.092 21.782C10.5198 22 11.0799 22 12.2 22Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </button>
+          )}
         </div>
         <button type="button" onClick={generateShortUrl}>
           Generate
@@ -122,7 +148,7 @@ function App() {
       <div className="theme-switcher">
         <button
           className={`theme-option ${theme === "light" ? "active" : ""}`}
-          onClick={() => setTheme("light")}
+          onClick={() => changeTheme("light")}
           aria-label="Light theme"
         >
           <svg
@@ -143,7 +169,7 @@ function App() {
         </button>
         <button
           className={`theme-option ${theme === "dark" ? "active" : ""}`}
-          onClick={() => setTheme("dark")}
+          onClick={() => changeTheme("dark")}
           aria-label="Dark theme"
         >
           <svg

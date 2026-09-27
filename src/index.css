@@ -115,12 +115,23 @@ code {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 body:has(.app[data-theme="light"]) {

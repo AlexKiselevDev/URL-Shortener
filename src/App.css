@@ -1,48 +1,53 @@
 :root {
   .app {
-    --primary: #8e51ff;
+    --primary: #2b7fff;
+    --primary-hover: #51a2ff;
     /* Visual */
-    --element-shadow: 0 0 0 1px #00000014;
-    --element-border: 1.5px solid transparent;
-    --element-button-shadow:
-      0px 8px 12px color(display-p3 0.557 0.318 1 / 0.32),
-      inset 0px 0px 4px color(display-p3 1 1 1 / 0.92);
+    --element-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.04), 0 0 0 1px color(display-p3 0 0 0 / 0.04);
     /* Background */
-    --background: #fafafa;
     --card-background: #ffffff;
     /* Text */
-    --text-primary: #262626;
-    --text-secondary: #727272;
+    --text-primary: #171717;
+    --text-secondary: #737373;
     /* Input */
     --input-disabled-background: #fafafa;
-    --input-placeholder: #7e7e7e;
-    --input-error: 0 0 0 1px #ffa2a2;
+    --input-placeholder: #adadad;
+    --message-error: #fb2c36;
+    --input-error:
+      0px 0px 0px 1px rgba(255, 0, 38, 0.4),
+      0px 0px 0px 1px color(display-p3 0.984 0.173 0.212 / 0.4);
     /* Theme switcher */
-    --switch-background: #f5f5f5;
-    --input-icon: #727272;
-    --switch-icon-active: #8e51ff;
+    --switch-background: #fafafa;
+    --input-icon: #adadad;
+    --switch-icon-active: #2b7fff;
     --switch-background-active: #ffffff;
   }
 
   .app[data-theme="dark"] {
+    --primary: #3b82ef;
+    --primary-hover: #759bf4;
     /* Visual */
-    --element-shadow: none;
-    --element-border: 1.5px solid #1a1a1a;
-    --element-button-shadow: none;
+    --element-shadow:
+      0px 0px 0px 1px #1a1a1a,
+      0px 0px 0px 1px color(display-p3 0.102 0.102 0.102);
     /* Background */
-    --background: #0a0a0a;
-    --card-background: #0f0f0f;
+    --card-background: #0d0d0d;
     /* Text */
-    --text-primary: #fbfbfe;
-    --text-secondary: #8e8e8e;
+    --text-primary: #e6e6e6;
+    --text-secondary: #b3b3b3;
     /* Input */
-    --input-disabled-background: #141414;
-    --input-placeholder: #8e8e8e;
+    --input-disabled-background: #0f0f0f;
+    --input-placeholder: #4d4d4d;
+    --message-error: #e5414a;
+    --input-error:
+      0px 0px 0px 1px rgba(255, 0, 38, 0.4),
+      0px 0px 0px 1px color(display-p3 0.984 0.173 0.212 / 0.4);
     /* Theme switcher */
-    --switch-background: #0f0f0f;
-    --input-icon: #797979;
-    --switch-icon-active: #8e51ff;
-    --switch-background-active: #141414;
+    --switch-background: #0d0d0d;
+    --input-icon: #4d4d4d;
+    --switch-icon-active: #3b82ef;
+    --switch-background-active: #050505;
   }
 }
 
@@ -254,11 +259,9 @@
   background-color: var(--card-background);
   border-radius: 32px;
   box-shadow: var(--element-shadow);
-  border: var(--element-border);
 }
 
 .shortener label {
-  margin-bottom: 16px;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -266,6 +269,7 @@
   letter-spacing: 0.0054em;
   color: var(--text-primary);
   text-align: start;
+  margin-bottom: 16px;
 }
 
 .shortener input {
@@ -299,6 +303,7 @@
   background-color: var(--input-disabled-background);
   border-color: transparent;
   color: var(--text-primary);
+  transition: color 0.1s ease;
 }
 
 .shortener button {
@@ -316,14 +321,14 @@
   letter-spacing: 0.0054em;
   box-shadow: var(--element-button-shadow);
   transition: background-color 0.3s ease;
+  margin-bottom: 24px;
 }
 
 .shortener button:hover {
-  background-color: #7f22fe;
+  background-color: var(--primary-hover);
 }
 
 .shortener p {
-  margin-top: 24px;
   text-align: center;
   color: var(--text-secondary);
   font-style: normal;
@@ -334,22 +339,22 @@
 }
 
 .shortener input.input-error {
-  box-shadow: 0 0 0 1px #ffa2a2;
+  box-shadow: var(--input-error);
 }
 .shortener input.input-error:focus {
-  box-shadow: 0 0 0 1px #ffa2a2;
+  box-shadow: var(--input-error);
 }
 
 .error-message {
-  margin-top: -10px;
-  margin-bottom: 16px;
-  color: #fb2c36;
+  color: var(--message-error);
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.0048em;
   text-align: start;
+  margin-top: -8px;
+  margin-bottom: 24px;
 }
 
 /**/
@@ -360,7 +365,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .short-url-container input {
@@ -389,6 +394,16 @@
 }
 
 .shortener .copy-button svg {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.shortener .copy-button svg.copy-icon-visible {
+  opacity: 1;
+}
+
+.shortener .copy-button svg {
   width: 18px;
 }
 
@@ -399,9 +414,11 @@
 
 .theme-switcher {
   display: flex;
-  width: 116px;
-  height: 52px;
-  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 48px;
+  padding: 0px 4px;
   background: var(--switch-background);
   border-radius: 28px;
   box-shadow: var(--element-shadow);
@@ -412,11 +429,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  height: 100%;
-  padding: 14px;
+  width: 40px;
+  height: 40px;
   border: none;
-  border-radius: 24px;
+  border-radius: 100px;
   background: transparent;
   color: var(--input-icon);
   cursor: pointer;

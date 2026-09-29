@@ -118,6 +118,7 @@ code {
 }
 
 label,
+span,
 h1,
 h2,
 h3,
@@ -139,5 +140,5 @@ body:has(.app[data-theme="light"]) {
 }
 
 body:has(.app[data-theme="dark"]) {
-  background-color: #080808;
+  background-color: #050505;
 }
